@@ -1,6 +1,11 @@
 var LeafletLib = LeafletLib || {};
 var LeafletLib = {
 
+    latmin: 90,
+    latmax: -90,
+    lngmin: 180,
+    lngmax: -180,
+
     initialize: function(element, features, centroid, zoom) {
 
         LeafletLib.map = L.map(element).setView(new L.LatLng( centroid[0], centroid[1] ), zoom);
@@ -12,19 +17,11 @@ var LeafletLib = {
 
         LeafletLib.map.attributionControl.setPrefix('');
 
-
-        var latmin = 90;
-        var latmax = -90;
-        var lngmin = 180;
-        var lngmax = -180;
         if(typeof features.markers != "undefined"){
           for(var m=0;m<features.markers.length;m++){
-            new L.Marker( new L.LatLng( features.markers[m][0], features.markers[m][1] ) )
-              .addTo( LeafletLib.map );
-            latmin = Math.min(latmin, features.markers[m][0]);
-            latmax = Math.max(latmax, features.markers[m][0]);
-            lngmin = Math.min(lngmin, features.markers[m][1]);
-            lngmax = Math.max(lngmax, features.markers[m][1]);
+            var pt = new L.LatLng( features.markers[m][0], features.markers[m][1] );
+            new L.Marker( pt ).addTo( LeafletLib.map );
+            this.addBoundedPoint( pt );
           }
         }
         if(typeof features.geojson != "undefined"){
@@ -32,19 +29,11 @@ var LeafletLib = {
               style: LeafletLib.style
           }).addTo(LeafletLib.map);
 
-          var gj_bounds = LeafletLib.geojson.getBounds();
-          latmin = Math.min(latmin, gj_bounds.getSouth() );
-          latmax = Math.max(latmax, gj_bounds.getNorth() );
-          lngmin = Math.min(lngmin, gj_bounds.getWest() );
-          lngmax = Math.max(lngmax, gj_bounds.getEast() );
+          this.addBoundedBox( LeafletLib.geojson.getBounds() );
         }
 
-        if(latmax > latmin){
-          LeafletLib.map.fitBounds( new L.LatLngBounds(
-            new L.LatLng( latmin, lngmin ),
-            new L.LatLng( latmax, lngmax )
-          ));
-        }
+        this.fitFeatures();
+
     },
 
     style: function(feature) {
@@ -56,5 +45,28 @@ var LeafletLib = {
             fillOpacity: 0.7,
             fillColor: '#FD8D3C'
         };
+    },
+
+    addBoundedPoint: function( latlng ){
+        this.latmin = Math.min( this.latmin, latlng.lat );
+        this.latmax = Math.max( this.latmax, latlng.lat );
+        this.lngmin = Math.min( this.lngmin, latlng.lng );
+        this.lngmax = Math.max( this.lngmax, latlng.lng );
+    },
+
+    addBoundedBox: function( bounds ){
+        this.latmin = Math.min( this.latmin, gj_bounds.getSouth() );
+        this.latmax = Math.max( this.latmax, gj_bounds.getNorth() );
+        this.lngmin = Math.min( this.lngmin, gj_bounds.getWest() );
+        this.lngmax = Math.max( this.lngmax, gj_bounds.getEast() );
+    },
+
+    fitFeatures: function(){
+        if(this.latmax > this.latmin){
+          LeafletLib.map.fitBounds( new L.LatLngBounds(
+            new L.LatLng( this.latmin, this.lngmin ),
+            new L.LatLng( this.latmax, this.lngmax )
+          ));
+        }
     }
 }
