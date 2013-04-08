@@ -13,6 +13,7 @@ gem 'dalli'
 
 # api
 gem 'instagram'
+gem 'geocoder'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,6 +30,7 @@ end
 # markup and rendering
 gem 'haml-rails'
 gem 'twitter-bootstrap-rails'
+gem 'simple_form'
 
 gem 'jquery-rails'
 
