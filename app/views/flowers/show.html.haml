@@ -3,7 +3,7 @@
   :javascript
 
     LeafletLib.initialize(
-      $("#map")[0],
+      $("#detail-map")[0],
       {
         markers: [
           [ #{@flower.latitude}, #{@flower.longitude} ]
@@ -14,7 +14,28 @@
     );
     
 
-%h1
-  = @flower.name
+.row-fluid
+  .span8
 
-%div#map{:style => "width:300px;height:300px;"}
+    %h1
+      = @flower.name
+
+    %h3
+      Photos tagged with
+      = "##{@flower.tag}"
+
+    .alert.alert-info
+      Take a photo of this flower on Instagram and tag it with 
+      %strong
+        = "##{@flower.tag}"
+      and it will show up here!
+
+
+  .span4
+    .well
+      #detail-map
+
+      %h4
+        = @flower.address
+      %p
+        = @flower.created_at.to_s(:long)
