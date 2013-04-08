@@ -1,12 +1,10 @@
 class HomeController < ApplicationController
 
   def index
-    @flowers = ActiveSupport::JSON.encode( Flower.all )
+    @flowers = Flower.where("latitude IS NOT NULL")
+                        .order("created_at DESC").all
 
-    # @marker_latlngs = [ ]
-    #@flowers.each do |flower|
-    #  @marker_latlngs << [ flower.latitude, flower.longitude  ]
-    # end
+    @flowers_json = ActiveSupport::JSON.encode( @flowers )
   end
 
 end

@@ -7,7 +7,7 @@
       $("#map").css({'height': (h - offsetTop)});
     }).resize();
 
-    var flowers = #{@flowers};
+    var flowers = #{@flowers_json};
 
     LeafletLib.initialize(
       $("#map")[0],
@@ -22,6 +22,17 @@
       LeafletLib.map.addLayer(marker);
     }
 
-%h1 All Flowers
+.row-fluid
+  .span8
+    #map
+  .span4
+    .well
+      %h3 Recent flowers
 
-%div#map{:style=>"height:300px;"}
+      %ul
+        - @flowers[0..2].each do |f|
+          %li
+            %h4
+              %a{:href => "/flower/#{f.id}"}
+                = f.name
+            = f.address
