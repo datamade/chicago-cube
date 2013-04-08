@@ -1,7 +1,11 @@
 ChicagoCube::Application.routes.draw do
 
+
+  match 'flower/:id' => 'flowers#show'
+
+  get "about" => 'home#about'
   root :to => 'home#index'
-  
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
