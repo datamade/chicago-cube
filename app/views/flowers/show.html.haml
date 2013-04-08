@@ -1,2 +1,20 @@
+- content_for :javascripts do
+
+  :javascript
+
+    LeafletLib.initialize(
+      $("#map")[0],
+      {
+        markers: [
+          [ #{@flower.latitude}, #{@flower.longitude} ]
+        ]
+      },
+      [ #{@flower.latitude}, #{@flower.longitude} ],
+      15
+    );
+    
+
 %h1
   = @flower.name
+
+%div#map{:style => "width:300px;height:300px;"}
