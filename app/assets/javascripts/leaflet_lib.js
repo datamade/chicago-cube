@@ -63,10 +63,11 @@ var LeafletLib = {
 
     fitFeatures: function(){
         if(this.latmax > this.latmin){
-          LeafletLib.map.fitBounds( new L.LatLngBounds(
-            new L.LatLng( this.latmin, this.lngmin ),
-            new L.LatLng( this.latmax, this.lngmax )
-          ));
+          var bounds = new L.LatLngBounds(
+                      new L.LatLng( this.latmin, this.lngmin ),
+                      new L.LatLng( this.latmax, this.lngmax ));
+
+          LeafletLib.map.fitBounds( bounds.pad(.2) );
         }
     }
 }

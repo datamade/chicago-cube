@@ -3,6 +3,6 @@ class Flower < ActiveRecord::Base
   validates_presence_of :name, :address
 
   def tag
-    "chicago-cube-#{id}"
+    "chicagocube#{id}"
   end
 end

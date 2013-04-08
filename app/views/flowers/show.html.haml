@@ -14,15 +14,19 @@
     );
     
 
-.row-fluid
+.row
   .span8
 
     %h1
       = @flower.name
+      %small
+        = "##{@flower.tag}"
 
-    %h3
-      Photos tagged with
-      = "##{@flower.tag}"
+    %ul.thumbnails
+      - @instagram_photos.each do |photo|
+        %li.span4
+          .thumbnail
+            %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
 
     .alert.alert-info
       Take a photo of this flower on Instagram and tag it with 
