@@ -26,7 +26,6 @@ class FlowersController < ApplicationController
   end
 
   def show
-    @flower = Flower.where("id = #{params[:id]}").first
+    @flower = Flower.find(params[:id])
   end
-
 end

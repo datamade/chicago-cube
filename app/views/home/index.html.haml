@@ -1,1 +1,27 @@
-%h1 Hello World
+- content_for :javascripts do
+
+  :javascript
+    $(window).resize(function(){
+      var h = $(window).height(),
+        offsetTop = 70;
+      $("#map").css({'height': (h - offsetTop)});
+    }).resize();
+
+    var flowers = #{@flowers};
+
+    LeafletLib.initialize(
+      $("#map")[0],
+      { },
+      [ 41.8781136, -87.66677956445312 ],
+      11
+    );
+
+    for(var flower in flowers){
+      var marker = new L.Marker( new L.LatLng( flowers[flower].latitude, flowers[flower].longitude ) );
+      marker.bindPopup('<a href="/flower/' + flowers[flower].id + '"><h4>' + flowers[flower].name + '</h4></a>' + flowers[flower].address);
+      LeafletLib.map.addLayer(marker);
+    }
+
+%h1 All Flowers
+
+%div#map{:style=>"height:300px;"}
