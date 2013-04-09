@@ -5,6 +5,8 @@ var LeafletLib = {
     latmax: -90,
     lngmin: 180,
     lngmax: -180,
+    searchRadius: 805,
+    defaultCity: "",
 
     initialize: function(element, features, centroid, zoom) {
 
@@ -22,7 +24,7 @@ var LeafletLib = {
           for(var m=0;m<features.markers.length;m++){
             var pt = new L.LatLng( features.markers[m][0], features.markers[m][1] );
             new L.Marker( pt ).addTo( LeafletLib.map );
-            this.addBoundedPoint( pt );
+            LeafletLib.addBoundedPoint( pt );
           }
         }
         if(typeof features.geojson != "undefined"){
@@ -30,10 +32,10 @@ var LeafletLib = {
               style: LeafletLib.style
           }).addTo(LeafletLib.map);
 
-          this.addBoundedBox( LeafletLib.geojson.getBounds() );
+          LeafletLib.addBoundedBox( LeafletLib.geojson.getBounds() );
         }
 
-        this.fitFeatures();
+        LeafletLib.fitFeatures();
 
     },
 
@@ -49,26 +51,112 @@ var LeafletLib = {
     },
 
     addBoundedPoint: function( latlng ){
-        this.latmin = Math.min( this.latmin, latlng.lat );
-        this.latmax = Math.max( this.latmax, latlng.lat );
-        this.lngmin = Math.min( this.lngmin, latlng.lng );
-        this.lngmax = Math.max( this.lngmax, latlng.lng );
+        LeafletLib.latmin = Math.min( LeafletLib.latmin, latlng.lat );
+        LeafletLib.latmax = Math.max( LeafletLib.latmax, latlng.lat );
+        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, latlng.lng );
+        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, latlng.lng );
     },
 
     addBoundedBox: function( bounds ){
-        this.latmin = Math.min( this.latmin, gj_bounds.getSouth() );
-        this.latmax = Math.max( this.latmax, gj_bounds.getNorth() );
-        this.lngmin = Math.min( this.lngmin, gj_bounds.getWest() );
-        this.lngmax = Math.max( this.lngmax, gj_bounds.getEast() );
+        LeafletLib.latmin = Math.min( LeafletLib.latmin, gj_bounds.getSouth() );
+        LeafletLib.latmax = Math.max( LeafletLib.latmax, gj_bounds.getNorth() );
+        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, gj_bounds.getWest() );
+        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, gj_bounds.getEast() );
     },
 
     fitFeatures: function(){
-        if(this.latmax > this.latmin){
+        if(LeafletLib.latmax > LeafletLib.latmin){
           var bounds = new L.LatLngBounds(
-                      new L.LatLng( this.latmin, this.lngmin ),
-                      new L.LatLng( this.latmax, this.lngmax ));
+                      new L.LatLng( LeafletLib.latmin, LeafletLib.lngmin ),
+                      new L.LatLng( LeafletLib.latmax, LeafletLib.lngmax ));
 
           LeafletLib.map.fitBounds( bounds.pad(.2) );
+        }
+    },
+
+    squareAround: function(latlng, distance){
+        var north = latlng.lat + distance * 0.000008;
+        var south = latlng.lat - distance * 0.000008;
+        var east = latlng.lng + distance * 0.000009;
+        var west = latlng.lng - distance * 0.000009;
+        var bounds = [[south, west], [north, east]];
+        var sq = new L.rectangle(bounds);
+        return sq;
+    },
+
+    searchAddress: function(address){
+        if(LeafletLib.defaultCity && LeafletLib.defaultCity.length){
+          var checkaddress = address.toLowerCase();
+          var checkcity = LeafletLib.defaultCity.split(",")[0].toLowerCase();
+          if(checkaddress.indexOf(checkcity) == -1){
+            address += ", " + LeafletLib.defaultCity;
+          }
+        }
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.src = "http://nominatim.openstreetmap.org/search/" + encodeURIComponent(address) + "?format=json&json_callback=LeafletLib.returnAddress";
+        document.body.appendChild(s);
+    },
+
+    returnAddress: function(response){
+        //console.log(response);
+        if(!response.length){
+          alert("Sorry, no results found for that location.");
+          return;
+        }
+
+        var first = response[0];
+        var foundLocation = new L.LatLng(first.lat, first.lon);
+        if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
+          LeafletLib.map.removeLayer(LeafletLib.sq);
+        }
+
+        LeafletLib.sq = LeafletLib.squareAround(foundLocation, LeafletLib.searchRadius);
+        LeafletLib.sq.setStyle({
+          strokeColor: "#4b58a6",
+          strokeOpacity: 0.3,
+          strokeWeight: 1,
+          fillColor: "#4b58a6",
+          fillOpacity: 0.1
+        });
+        LeafletLib.map.addLayer(LeafletLib.sq);
+        LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
+    },
+
+    geolocate: function(){
+        // Try W3C Geolocation
+        var foundLocation;
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            foundLocation = new L.LatLng(position.coords.latitude * 1.0, position.coords.longitude * 1.0);
+
+            if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
+              LeafletLib.map.removeLayer(LeafletLib.sq);
+            }
+
+            LeafletLib.sq = LeafletLib.squareAround(foundLocation, LeafletLib.searchRadius);
+            LeafletLib.sq.setStyle({
+              strokeColor: "#4b58a6",
+              strokeOpacity: 0.3,
+              strokeWeight: 1,
+              fillColor: "#4b58a6",
+              fillOpacity: 0.1
+            });
+            LeafletLib.map.addLayer(LeafletLib.sq);
+            LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
+
+            //console.log(foundLocation);
+            //if(typeof this.scircle != 'undefined' && this.scircle){
+            //  map.removeLayer( this.scircle );
+            //}
+            //console.log(foundLocation);
+            //this.scircle = new L.Circle([foundLocation.lat, foundLocation.lng], this.searchRadius * 1);
+            //this.scircle.addTo(LeafletLib.map);
+            //LeafletLib.map.fitBounds( this.scircle.getBounds().pad(0.2) );
+          }, null);
+        }
+        else {
+          alert("Sorry, we could not find your location.");
         }
     }
 }
