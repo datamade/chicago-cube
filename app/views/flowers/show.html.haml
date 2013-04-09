@@ -4,15 +4,21 @@
 
     LeafletLib.initialize(
       $("#detail-map")[0],
-      {
-        markers: [
-          [ #{@flower.latitude}, #{@flower.longitude} ]
-        ]
-      },
+      { },
       [ #{@flower.latitude}, #{@flower.longitude} ],
       15
     );
     
+    var flowerIcon = L.icon({
+      iconUrl: "/assets/flowers.png",
+      iconSize: [ 32, 33 ],
+      shadowUrl: "/assets/square-shadow.png",
+      shadowSize: [ 40, 26 ],
+      shadowAnchor: [ 10, 5 ]
+    });
+
+    var pt = new L.LatLng( #{@flower.latitude}, #{@flower.longitude} );
+    var marker = new L.Marker( pt, { icon: flowerIcon, clickable: false } ).addTo(LeafletLib.map);
 
 .row
   .span8

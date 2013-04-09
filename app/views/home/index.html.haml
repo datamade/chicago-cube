@@ -16,10 +16,18 @@
       11
     );
 
+    var flowerIcon = L.icon({
+      iconUrl: "/assets/flowers.png",
+      iconSize: [ 32, 33 ],
+      shadowUrl: "/assets/square-shadow.png",
+      shadowSize: [ 40, 26 ],
+      shadowAnchor: [ 10, 5 ]
+    });
+
     for(var flower in flowers){
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
       LeafletLib.addBoundedPoint( pt );
-      var marker = new L.Marker( pt )
+      var marker = new L.Marker( pt, { icon: flowerIcon } )
         .bindPopup('<a href="/flower/' + flowers[flower].id + '"><h4>' + flowers[flower].name + '</h4></a>' + flowers[flower].address)
         .addTo(LeafletLib.map);
     }

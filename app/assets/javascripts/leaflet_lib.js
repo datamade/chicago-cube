@@ -112,7 +112,7 @@ var LeafletLib = {
         LeafletLib.centerMark = new L.Marker(foundLocation, { icon: (new L.Icon({
           iconUrl: '/assets/blue-pushpin.png',
           iconSize: [32, 32],
-          iconAnchor: [16, 10]
+          iconAnchor: [10, 32]
         }))}).addTo(LeafletLib.map);
 
     },
