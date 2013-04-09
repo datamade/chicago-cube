@@ -30,6 +30,23 @@
     #map
   .span4
     .well
+      %h4
+        Find flowers
+        %span.hasgeolocation
+          (
+          %a#find_me{ :href => "#" } near me
+          )
+      %input#search_address.input-block-level{ :type => "text", :placeholder => "Enter an address or an intersection" }
+      %label
+        within
+        %select#search_radius.input-small
+          %option{ :value => "400" } 2 blocks
+          %option{ :value => "805" } 1/2 mile
+          %option{ :value => "1610" } 1 mile
+          %option{ :value => "3220" } 2 miles
+      %input#search.btn.btn-primary{ :type => "button", :value => "Search" }
+      
+    .well
       %h3 Recent flowers
 
       %ul

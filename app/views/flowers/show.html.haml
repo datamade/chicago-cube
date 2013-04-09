@@ -28,7 +28,7 @@
           .thumbnail
             %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
             - if photo.created_time != nil
-              %p
+              %p.text-center
                 = Time.at( photo.created_time.to_i ).strftime "%B %-d, %Y"
 
     .alert.alert-info
