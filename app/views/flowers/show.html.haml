@@ -23,10 +23,10 @@
         = "##{@flower.tag}"
 
     %ul.thumbnails
-      - @instagram_photos.each do |photo|
+      - @flower.instagram_photos.each do |photo|
         %li.span4
           .thumbnail
-            %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
+            %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :title => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
             - if photo.created_time != nil
               %p.text-center
                 = Time.at( photo.created_time.to_i ).strftime "%B %-d, %Y"

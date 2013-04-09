@@ -5,4 +5,9 @@ class Flower < ActiveRecord::Base
   def tag
     "chicagocube#{id}"
   end
+
+  def instagram_photos
+    Instagram.tag_recent_media('gerbera')[0..5]
+  end
+
 end

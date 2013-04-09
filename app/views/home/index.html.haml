@@ -47,12 +47,9 @@
       %input#search.btn.btn-primary{ :type => "button", :value => "Search" }
       
     .well
-      %h3 Recent flowers
+      %h4 Recent flowers
 
-      %ul
-        - @flowers[0..2].each do |f|
-          %li
-            %h4
-              %a{:href => "/flower/#{f.id}"}
-                = f.name
-            = f.address
+      - @flowers[0..3].each do |f|
+        - f.instagram_photos[0..0].each do |photo|
+          %a{:href => "/flower/#{f.id}"}
+            %img.img-polaroid{:alt => f.name, :title => f.name, :src => photo.images.thumbnail.url }
