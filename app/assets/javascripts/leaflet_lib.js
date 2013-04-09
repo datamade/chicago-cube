@@ -7,6 +7,7 @@ var LeafletLib = {
     lngmax: -180,
     searchRadius: 805,
     defaultCity: "",
+    markers: [ ],
 
     initialize: function(element, features, centroid, zoom) {
 
@@ -58,10 +59,10 @@ var LeafletLib = {
     },
 
     addBoundedBox: function( bounds ){
-        LeafletLib.latmin = Math.min( LeafletLib.latmin, gj_bounds.getSouth() );
-        LeafletLib.latmax = Math.max( LeafletLib.latmax, gj_bounds.getNorth() );
-        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, gj_bounds.getWest() );
-        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, gj_bounds.getEast() );
+        LeafletLib.latmin = Math.min( LeafletLib.latmin, gj_bounds.getSouthWest().lat );
+        LeafletLib.latmax = Math.max( LeafletLib.latmax, gj_bounds.getNorthEast().lat );
+        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, gj_bounds.getSouthWest().lng );
+        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, gj_bounds.getNorthEast().lng );
     },
 
     fitFeatures: function(){
@@ -114,7 +115,6 @@ var LeafletLib = {
           iconSize: [32, 32],
           iconAnchor: [10, 32]
         }))}).addTo(LeafletLib.map);
-
     },
 
     returnAddress: function(response){
@@ -132,7 +132,52 @@ var LeafletLib = {
         }
 
         LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
+
+        LeafletLib.filterMarkers( { rectangle: LeafletLib.sq } );
+
         LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
+    },
+
+    addMarker: function( marker ){
+        LeafletLib.map.addLayer(marker);
+        LeafletLib.addBoundedPoint( marker.getLatLng() );
+        LeafletLib.markers.push( marker );
+    },
+
+    ptInShape: function( pt, shape ){
+        if( typeof shape.rectangle != "undefined" ){
+          var bounds = shape.rectangle.getBounds();
+          if(pt.lat < bounds.getNorthEast().lat && pt.lat > bounds.getSouthWest().lat && pt.lng < bounds.getNorthEast().lng && pt.lng > bounds.getSouthWest().lng){
+            return true;
+          }
+          return false;
+        }
+        else if( typeof shape.circle != "undefined" ){
+          // getRadius is in meters, makes this more complex
+        }
+        else if( typeof shape.polygon != "undefined" ){
+          var poly = shape.polygon.getLatLngs();
+          for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i){
+            ((poly[i].lat <= pt.lat && pt.lat < poly[j].lat) || (poly[j].lat <= pt.lat && pt.lat < poly[i].lat))
+            && (pt.lng < (poly[j].lng - poly[i].lng) * (pt.lat - poly[i].lat) / (poly[j].lat - poly[i].lat) + poly[i].lng)
+            && (c = !c);
+          }
+          return c;
+       }
+    },
+
+    filterMarkers: function( boundary ){
+        for(var m=0;m<LeafletLib.markers.length;m++){
+          var ll = LeafletLib.markers[m].getLatLng();
+          if(LeafletLib.ptInShape(ll, boundary)){
+            if( !LeafletLib.map.hasLayer( LeafletLib.markers[m] ) ){
+              LeafletLib.map.addLayer( LeafletLib.markers[m] );
+            }
+          }
+          else{
+            LeafletLib.map.removeLayer( LeafletLib.markers[m] );
+          }
+        }
     },
 
     geolocate: function(){
@@ -148,6 +193,9 @@ var LeafletLib = {
             }
 
             LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
+
+            LeafletLib.filterMarkers( { rectangle: LeafletLib.sq } );
+
             LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
           }, null);
         }
