@@ -27,6 +27,9 @@
         %li.span4
           .thumbnail
             %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
+            - if photo.created_time != nil
+              %p
+                = Time.at( photo.created_time.to_i ).strftime "%B %-d, %Y"
 
     .alert.alert-info
       Take a photo of this flower on Instagram and tag it with 
@@ -42,4 +45,4 @@
       %h4
         = @flower.address
       %p
-        = @flower.created_at.to_s(:long)
+        = @flower.created_at.strftime "%B %-d, %Y"
