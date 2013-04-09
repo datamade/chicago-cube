@@ -108,6 +108,13 @@ var LeafletLib = {
           fillOpacity: 0.1
         });
         LeafletLib.map.addLayer(LeafletLib.sq);
+
+        LeafletLib.centerMark = new L.Marker(foundLocation, { icon: (new L.Icon({
+          iconUrl: '/assets/blue-pushpin.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 10]
+        }))}).addTo(LeafletLib.map);
+
     },
 
     returnAddress: function(response){
@@ -121,6 +128,7 @@ var LeafletLib = {
         var foundLocation = new L.LatLng(first.lat, first.lon);
         if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
           LeafletLib.map.removeLayer(LeafletLib.sq);
+          LeafletLib.map.removeLayer(LeafletLib.centerMark);
         }
 
         LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
@@ -136,6 +144,7 @@ var LeafletLib = {
 
             if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
               LeafletLib.map.removeLayer(LeafletLib.sq);
+              LeafletLib.map.removeLayer(LeafletLib.centerMark);
             }
 
             LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
