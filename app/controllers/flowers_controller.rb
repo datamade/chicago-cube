@@ -27,7 +27,5 @@ class FlowersController < ApplicationController
 
   def show
     @flower = Flower.find(params[:id])
-    # puts @flower.tag
-    @instagram_photos = Instagram.tag_recent_media('cats')[0..5]
   end
 end
