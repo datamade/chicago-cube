@@ -180,23 +180,30 @@ var LeafletLib = {
         }
     },
 
-    geolocate: function(){
+    geolocate: function(alt_callback){
         // Try W3C Geolocation
         var foundLocation;
         if(navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
-            foundLocation = new L.LatLng(position.coords.latitude * 1.0, position.coords.longitude * 1.0);
 
-            if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
-              LeafletLib.map.removeLayer(LeafletLib.sq);
-              LeafletLib.map.removeLayer(LeafletLib.centerMark);
+            if(typeof alt_callback != "undefined"){
+              alt_callback( position );
             }
+            else{
 
-            LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
+              foundLocation = new L.LatLng(position.coords.latitude * 1.0, position.coords.longitude * 1.0);
 
-            LeafletLib.filterMarkers( { rectangle: LeafletLib.sq } );
+              if(typeof LeafletLib.sq != "undefined" && LeafletLib.sq){
+                LeafletLib.map.removeLayer(LeafletLib.sq);
+                LeafletLib.map.removeLayer(LeafletLib.centerMark);
+              }
 
-            LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
+              LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
+
+              LeafletLib.filterMarkers( { rectangle: LeafletLib.sq } );
+
+              LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
+            }
           }, null);
         }
         else {

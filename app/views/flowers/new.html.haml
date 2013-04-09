@@ -1,6 +1,17 @@
+- content_for :javascripts do
+  = javascript_include_tag "leaflet_lib"
+  
+  :javascript
+    $("#geolocate").on("click", function(e){
+      LeafletLib.geolocate(function(position){
+        $("#flowers_address").val( position.coords.latitude + "," + position.coords.longitude );
+      });
+    });
+
 %h4 Share your flower with us
 
 = simple_form_for(:flowers, :html => { :class => 'form-horizontal' }) do |f|
   = f.input :name, :label => "Name your flower", :placeholder => 'Gerbera L.',:required => false
+  %a#geolocate.btn.btn-primary{ :href => "#" } Find Me
   = f.input :address, :label => "Where did you plant it?", :placeholder => 'Enter an address or intersection in Chicago', :required => false, :input_html => {:class => 'span6'}
   = f.button :submit, :value => 'Save'
