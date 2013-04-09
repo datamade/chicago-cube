@@ -98,6 +98,18 @@ var LeafletLib = {
         document.body.appendChild(s);
     },
 
+    drawSquare: function(foundLocation, searchRadius){
+        LeafletLib.sq = LeafletLib.squareAround(foundLocation, searchRadius);
+        LeafletLib.sq.setStyle({
+          strokeColor: "#4b58a6",
+          strokeOpacity: 0.3,
+          strokeWeight: 1,
+          fillColor: "#4b58a6",
+          fillOpacity: 0.1
+        });
+        LeafletLib.map.addLayer(LeafletLib.sq);
+    },
+
     returnAddress: function(response){
         //console.log(response);
         if(!response.length){
@@ -111,15 +123,7 @@ var LeafletLib = {
           LeafletLib.map.removeLayer(LeafletLib.sq);
         }
 
-        LeafletLib.sq = LeafletLib.squareAround(foundLocation, LeafletLib.searchRadius);
-        LeafletLib.sq.setStyle({
-          strokeColor: "#4b58a6",
-          strokeOpacity: 0.3,
-          strokeWeight: 1,
-          fillColor: "#4b58a6",
-          fillOpacity: 0.1
-        });
-        LeafletLib.map.addLayer(LeafletLib.sq);
+        LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
         LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
     },
 
@@ -134,25 +138,8 @@ var LeafletLib = {
               LeafletLib.map.removeLayer(LeafletLib.sq);
             }
 
-            LeafletLib.sq = LeafletLib.squareAround(foundLocation, LeafletLib.searchRadius);
-            LeafletLib.sq.setStyle({
-              strokeColor: "#4b58a6",
-              strokeOpacity: 0.3,
-              strokeWeight: 1,
-              fillColor: "#4b58a6",
-              fillOpacity: 0.1
-            });
-            LeafletLib.map.addLayer(LeafletLib.sq);
+            LeafletLib.drawSquare(foundLocation, LeafletLib.searchRadius);
             LeafletLib.map.fitBounds( LeafletLib.sq.getBounds().pad(0.2) );
-
-            //console.log(foundLocation);
-            //if(typeof this.scircle != 'undefined' && this.scircle){
-            //  map.removeLayer( this.scircle );
-            //}
-            //console.log(foundLocation);
-            //this.scircle = new L.Circle([foundLocation.lat, foundLocation.lng], this.searchRadius * 1);
-            //this.scircle.addTo(LeafletLib.map);
-            //LeafletLib.map.fitBounds( this.scircle.getBounds().pad(0.2) );
           }, null);
         }
         else {
