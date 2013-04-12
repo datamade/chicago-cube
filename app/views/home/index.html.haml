@@ -1,12 +1,6 @@
 - content_for :javascripts do
 
   :javascript
-    $(window).resize(function(){
-      var h = $(window).height(),
-        offsetTop = 70;
-      $("#map").css({'height': (h - offsetTop)});
-    }).resize();
-
     var flowers = #{@flowers_json};
 
     LeafletLib.initialize(
@@ -17,7 +11,7 @@
     );
 
     var flowerIcon = L.icon({
-      iconUrl: "/assets/flowers.png",
+      iconUrl: "/assets/little.png",
       iconSize: [ 32, 33 ],
       shadowUrl: "/assets/square-shadow.png",
       shadowSize: [ 40, 26 ],
@@ -34,8 +28,8 @@
 
       if(latestPhoto(flowers[flower]) != ""){
         flowercount++;
-        if(flowercount < 4){
-          $("#recentlist").append("<a href='/flower/" + flowers[flower].id + "'>" + latestPhoto(flowers[flower]) + "</a>");
+        if(flowercount < 6){
+          $("#recentlist").append("<li class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
         }
       }
     }
@@ -43,7 +37,7 @@
 
     function latestPhoto(flower){
       if(flower.photos && flower.photos.length){
-        return "<img class='img img-polaroid' alt='" + flower.name + "' title='" + flower.name + "' src='" + flower.photos[0].images.thumbnail.url + "'/>";
+        return "<img alt='" + flower.name + "' title='" + flower.name + "' src='" + flower.photos[0].images.thumbnail.url + "'/>";
       }
       else{
         return "";
@@ -51,27 +45,8 @@
     }
 
 .row-fluid
-  .span8
+  .span12
     #map
-  .span4
-    .well
-      %h4
-        Find flowers
-        %span.hasgeolocation
-          (
-          %a#find_me{ :href => "#" } near me
-          )
-      %input#search_address.input-block-level{ :type => "text", :placeholder => "Enter an address or an intersection" }
-      %label
-        within
-        %select#search_radius.input-small
-          %option{ :value => "400" } 2 blocks
-          %option{ :value => "805" } 1/2 mile
-          %option{ :value => "1610" } 1 mile
-          %option{ :value => "3220" } 2 miles
-      %input#search.btn.btn-primary{ :type => "button", :value => "Search" }
-      
-    .well
-      %h4 Recent flowers
-
+    %hr
+    %ul.thumbnails
       #recentlist

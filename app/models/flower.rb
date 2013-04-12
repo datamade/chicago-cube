@@ -7,7 +7,7 @@ class Flower < ActiveRecord::Base
   end
 
   def instagram_photos
-    Instagram.tag_recent_media('gerbera')[0..5]
+    Instagram.tag_recent_media(tag)[0..5]
   end
 
 end

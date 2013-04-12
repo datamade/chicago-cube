@@ -8,10 +8,14 @@
       });
     });
 
-%h4 Share your flower with us
+%h4 Share your daisy with us
 
-= simple_form_for(:flowers, :html => { :class => 'form-horizontal' }) do |f|
-  = f.input :name, :label => "Name your flower", :placeholder => 'Gerbera L.',:required => false
-  %a#geolocate.btn.btn-primary{ :href => "#" } Find Me
-  = f.input :address, :label => "Where did you plant it?", :placeholder => 'Enter an address or intersection in Chicago', :required => false, :input_html => {:class => 'span6'}
-  = f.button :submit, :value => 'Save'
+= simple_form_for(:flowers, :html => { :class => 'form' }) do |f|
+  = f.input :name, :label => "Name your daisy", :placeholder => 'Gerbera L.',:required => false
+
+  = f.input :address, :label => "Where did you plant it?", :required => false, :wrapper => :append do
+    = f.input_field :address, :placeholder => '123 N State St.'
+    %a#geolocate.btn.btn-info{ :href => "#" } 
+      Find Me
+    
+  = f.button :submit, :value => 'Share', :class => 'btn btn-primary'
