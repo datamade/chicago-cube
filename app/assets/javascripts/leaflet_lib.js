@@ -59,10 +59,10 @@ var LeafletLib = {
     },
 
     addBoundedBox: function( bounds ){
-        LeafletLib.latmin = Math.min( LeafletLib.latmin, gj_bounds.getSouthWest().lat );
-        LeafletLib.latmax = Math.max( LeafletLib.latmax, gj_bounds.getNorthEast().lat );
-        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, gj_bounds.getSouthWest().lng );
-        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, gj_bounds.getNorthEast().lng );
+        LeafletLib.latmin = Math.min( LeafletLib.latmin, bounds.getSouthWest().lat );
+        LeafletLib.latmax = Math.max( LeafletLib.latmax, bounds.getNorthEast().lat );
+        LeafletLib.lngmin = Math.min( LeafletLib.lngmin, bounds.getSouthWest().lng );
+        LeafletLib.lngmax = Math.max( LeafletLib.lngmax, bounds.getNorthEast().lng );
     },
 
     fitFeatures: function(){

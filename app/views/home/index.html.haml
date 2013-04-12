@@ -25,13 +25,30 @@
       popupAnchor: [ 0, -10 ]
     });
 
+    var flowercount = 0;
     for(var flower in flowers){
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
       var marker = new L.Marker( pt, { icon: flowerIcon } )
-        .bindPopup('<a href="/flower/' + flowers[flower].id + '"><h4>' + flowers[flower].name + '</h4></a>' + flowers[flower].address);
+        .bindPopup('<a href="/flower/' + flowers[flower].id + '"><h4>' + flowers[flower].name + '</h4>' + latestPhoto( flowers[flower] ) + '</a>');
       LeafletLib.addMarker( marker );
+
+      if(latestPhoto(flowers[flower]) != ""){
+        flowercount++;
+        if(flowercount < 4){
+          $("#recentlist").append("<a href='/flower/" + flowers[flower].id + "'>" + latestPhoto(flowers[flower]) + "</a>");
+        }
+      }
     }
     LeafletLib.fitFeatures();
+
+    function latestPhoto(flower){
+      if(flower.photos && flower.photos.length){
+        return "<img class='img img-polaroid' alt='" + flower.name + "' title='" + flower.name + "' src='" + flower.photos[0].images.thumbnail.url + "'/>";
+      }
+      else{
+        return "";
+      }
+    }
 
 .row-fluid
   .span8
@@ -57,7 +74,4 @@
     .well
       %h4 Recent flowers
 
-      - @flowers[0..3].each do |f|
-        - f.instagram_photos[0..0].each do |photo|
-          %a{:href => "/flower/#{f.id}"}
-            %img.img-polaroid{:alt => f.name, :title => f.name, :src => photo.images.thumbnail.url }
+      #recentlist
