@@ -10,11 +10,12 @@
     );
     
     var flowerIcon = L.icon({
-      iconUrl: "/assets/flowers.png",
+      iconUrl: "/assets/little.png",
       iconSize: [ 32, 33 ],
       shadowUrl: "/assets/square-shadow.png",
       shadowSize: [ 40, 26 ],
-      shadowAnchor: [ 10, 5 ]
+      shadowAnchor: [ 10, 5 ],
+      popupAnchor: [ 0, -10 ]
     });
 
     var pt = new L.LatLng( #{@flower.latitude}, #{@flower.longitude} );

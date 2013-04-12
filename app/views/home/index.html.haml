@@ -20,16 +20,54 @@
     });
 
     var flowercount = 0;
+    var flower_popup = new L.Popup();
+
+    var openMarker = function(marker, flower){
+      flower_popup.setLatLng( marker.getLatLng() )
+        .setContent('<a href="/flower/' + flower.id + '"><h4>' + flower.name + '</h4>' + latestPhoto( flower ) + '</a>')
+        .openOn(LeafletLib.map);
+
+      $("#flower_" + flower.id + " a").css({
+        "border-color": "#0a0",
+        "border-width": "4px"
+      });
+    };
+    var enableMarker = function(marker, flower){
+      marker.on('click', function(e){
+        openMarker(marker, flower);
+      });
+      marker.on('mouseover', function(e){
+        openMarker(marker, flower);
+      });
+    };
+
+
     for(var flower in flowers){
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
-      var marker = new L.Marker( pt, { icon: flowerIcon } )
-        .bindPopup('<a href="/flower/' + flowers[flower].id + '"><h4>' + flowers[flower].name + '</h4>' + latestPhoto( flowers[flower] ) + '</a>');
+      var marker = new L.Marker( pt, { icon: flowerIcon } );
+      enableMarker(marker, flowers[flower]);
       LeafletLib.addMarker( marker );
 
       if(latestPhoto(flowers[flower]) != ""){
         flowercount++;
         if(flowercount < 6){
-          $("#recentlist").append("<li class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
+          $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
+          $("#flower_" + flowers[flower].id).on('mouseover', function(e){
+            openMarker(marker, flowers[flower]);
+          });
+          $("#flower_" + flowers[flower].id).on('mouseout', function(e){
+            $("#flower_" + flowers[flower].id + " a").css({
+              "border-color": "rgb(221,221,221)",
+              "border-width": "1px"
+            });
+            map.removeLayer( flower_popup );
+          });
+          marker.on('mouseout', function(e){
+            $("#flower_" + flowers[flower].id + " a").css({
+              "border-color": "rgb(221,221,221)",
+              "border-width": "1px"
+            });
+          });
         }
       }
     }
