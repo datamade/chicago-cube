@@ -19,7 +19,6 @@
       popupAnchor: [ 0, -10 ]
     });
 
-    var flowercount = 0;
     var flower_popup = new L.Popup();
 
     var openMarker = function(marker, flower){
@@ -28,9 +27,48 @@
         .openOn(LeafletLib.map);
 
       $("#flower_" + flower.id + " a").css({
-        "border-color": "#0a0",
+        "border-color": "darkred",
         "border-width": "4px"
       });
+
+
+      var flower_popup_timeout;
+      var flower_popup_exited = false;
+      marker.on('mouseout', function(e){
+        flower_popup_exited = true;
+        window.clearTimeout(flower_popup_timeout);
+        flower_popup_timeout = window.setTimeout(function(){
+          if(flower_popup_exited){
+            flower_popup_exited = false;
+            LeafletLib.map.removeLayer(flower_popup);
+            $("#flower_" + flower.id + " a").css({
+              "border-color": "rgb(221,221,221)",
+              "border-width": "1px"
+            });
+          }
+        }, 750);        
+      });
+      $(".leaflet-popup, #flower_" + flower.id + " a").on('mouseover', function(e){
+        flower_popup_exited = false;
+      });
+      $(".leaflet-popup, #flower_" + flower.id + " a").on('mousemove', function(e){
+        //flower_popup_exited = false;
+        window.clearTimeout(flower_popup_timeout);
+        flower_popup_timeout = window.setTimeout(function(){
+          if(flower_popup_exited){
+            flower_popup_exited = false;
+            LeafletLib.map.removeLayer(flower_popup);
+            $("#flower_" + flower.id + " a").css({
+              "border-color": "rgb(221,221,221)",
+              "border-width": "1px"
+            });
+          }
+        }, 750);
+      });
+      $(".leaflet-popup, #flower_" + flower.id + " a").on('mouseout', function(e){
+        flower_popup_exited = true;
+      });
+
     };
     var enableMarker = function(marker, flower){
       marker.on('click', function(e){
@@ -41,6 +79,7 @@
       });
     };
 
+    var flowercount = 0; // limits number of photos in gallery
 
     for(var flower in flowers){
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
@@ -54,19 +93,6 @@
           $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
           $("#flower_" + flowers[flower].id).on('mouseover', function(e){
             openMarker(marker, flowers[flower]);
-          });
-          $("#flower_" + flowers[flower].id).on('mouseout', function(e){
-            $("#flower_" + flowers[flower].id + " a").css({
-              "border-color": "rgb(221,221,221)",
-              "border-width": "1px"
-            });
-            map.removeLayer( flower_popup );
-          });
-          marker.on('mouseout', function(e){
-            $("#flower_" + flowers[flower].id + " a").css({
-              "border-color": "rgb(221,221,221)",
-              "border-width": "1px"
-            });
           });
         }
       }
