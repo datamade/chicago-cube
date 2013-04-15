@@ -75,6 +75,7 @@ GEM
     mime-types (1.22)
     multi_json (1.7.2)
     multipart-post (1.2.0)
+    newrelic_rpm (3.6.0.83)
     pg (0.15.0)
     polyglot (0.3.3)
     rack (1.4.5)
@@ -144,6 +145,7 @@ DEPENDENCIES
   jquery-rails
   less-rails
   memcachier
+  newrelic_rpm
   pg
   rails (= 3.2.13)
   simple_form
