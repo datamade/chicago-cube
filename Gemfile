@@ -48,3 +48,6 @@ gem 'unicorn'
 
 # To use debugger
 # gem 'debugger'
+
+# New Relic
+gem 'newrelic_rpm'
