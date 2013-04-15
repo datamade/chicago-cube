@@ -11,6 +11,7 @@ class Flower < ActiveRecord::Base
     if photos == nil
       photos = Instagram.tag_recent_media(tag)[0..5]
       Rails.cache.write(tag, photos)
+      photos = [ ]
     end
 
     photos
