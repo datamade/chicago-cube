@@ -19,18 +19,11 @@
       popupAnchor: [ 0, -10 ]
     });
 
-    var flower_popup = new L.Popup();
-
     var openMarker = function(marker, flower){
-      flower_popup.setLatLng( marker.getLatLng() )
-        .setContent('<a href="/flower/' + flower.id + '"><h4>' + flower.name + '</h4>' + latestPhoto( flower ) + '</a>')
-        .openOn(LeafletLib.map);
-
       $("#flower_" + flower.id + " a").css({
         "border-color": "darkred",
         "border-width": "4px"
       });
-
 
       var flower_popup_timeout;
       var flower_popup_exited = false;
@@ -40,7 +33,7 @@
         flower_popup_timeout = window.setTimeout(function(){
           if(flower_popup_exited){
             flower_popup_exited = false;
-            LeafletLib.map.removeLayer(flower_popup);
+            LeafletLib.map.closePopup();
             $("#flower_" + flower.id + " a").css({
               "border-color": "rgb(221,221,221)",
               "border-width": "1px"
@@ -57,7 +50,7 @@
         flower_popup_timeout = window.setTimeout(function(){
           if(flower_popup_exited){
             flower_popup_exited = false;
-            LeafletLib.map.removeLayer(flower_popup);
+            LeafletLib.map.closePopup();
             $("#flower_" + flower.id + " a").css({
               "border-color": "rgb(221,221,221)",
               "border-width": "1px"
@@ -68,11 +61,13 @@
 
     };
     var enableMarker = function(marker, flower){
+      marker.bindPopup('<a href="/flower/' + flower.id + '"><h4>' + flower.name + '</h4>' + latestPhoto( flower ) + '</a>')
+
       marker.on('click', function(e){
         openMarker(marker, flower);
       });
       marker.on('mouseover', function(e){
-        openMarker(marker, flower);
+        marker.fire('click');
       });
     };
 
@@ -89,7 +84,7 @@
         if(flowercount < 6){
           $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
           $("#flower_" + flowers[flower].id).on('mouseover', function(e){
-            openMarker(marker, flowers[flower]);
+            marker.fire('click');
           });
         }
       }
