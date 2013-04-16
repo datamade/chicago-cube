@@ -51,8 +51,8 @@
       $(".leaflet-popup, #flower_" + flower.id + " a").on('mouseover', function(e){
         flower_popup_exited = false;
       });
-      $(".leaflet-popup, #flower_" + flower.id + " a").on('mousemove', function(e){
-        //flower_popup_exited = false;
+      $(".leaflet-popup, #flower_" + flower.id + " a").on('mouseout', function(e){
+        flower_popup_exited = true;
         window.clearTimeout(flower_popup_timeout);
         flower_popup_timeout = window.setTimeout(function(){
           if(flower_popup_exited){
@@ -64,9 +64,6 @@
             });
           }
         }, 750);
-      });
-      $(".leaflet-popup, #flower_" + flower.id + " a").on('mouseout', function(e){
-        flower_popup_exited = true;
       });
 
     };
