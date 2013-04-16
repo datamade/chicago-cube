@@ -67,7 +67,9 @@
         openMarker(marker, flower);
       });
       marker.on('mouseover', function(e){
-        marker.fire('click');
+        if($(".leaflet-popup").length === 0){
+          marker.fire('click');
+        }
       });
     };
 
