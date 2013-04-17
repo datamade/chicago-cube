@@ -26,9 +26,15 @@
 
     %h1
       = @flower.name
-      %small
-        = "##{@flower.tag}"
+    %hr
 
+    .alert.alert-info
+      Take a photo of this flower on Instagram and tag it with 
+      %strong
+        = "##{@flower.tag}"
+      and it will show up here!
+
+    %h4 Instagram photos
     %ul.thumbnails
       - @flower.instagram_photos.each do |photo|
         %li.span4
@@ -38,18 +44,17 @@
               %p.text-center
                 = Time.at( photo.created_time.to_i ).strftime "%B %-d, %Y"
 
-    .alert.alert-info
-      Take a photo of this flower on Instagram and tag it with 
-      %strong
-        = "##{@flower.tag}"
-      and it will show up here!
-
 
   .span4
     .well
       #detail-map
 
-      %h4
-        = @flower.address
-      %p
-        = @flower.created_at.strftime "%B %-d, %Y"
+      %dl.dl-horizontal
+        %dt
+          Instagram tag
+        %dd
+          = "##{@flower.tag}"
+        %dt
+          Planted on
+        %dd
+          = @flower.created_at.strftime "%B %-d, %Y"

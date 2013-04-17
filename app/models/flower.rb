@@ -8,7 +8,7 @@ class Flower < ActiveRecord::Base
 
   def instagram_photos
     photos = Rails.cache.read(tag)
-    if photos == nil
+    if photos.nil?
       photos = Instagram.tag_recent_media(tag)[0..5]
       Rails.cache.write(tag, photos, :timeToLive => 300.seconds)
       # photos = [ ] # for testing when cache is used
