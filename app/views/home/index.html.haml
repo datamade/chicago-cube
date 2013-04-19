@@ -22,7 +22,7 @@
     var openMarker = function(marker, flower){
       $("#flower_" + flower.id + " a").css({
         "border-color": "darkred",
-        "border-width": "4px"
+        "border-width": "2px"
       });
 
       var flower_popup_timeout;
@@ -36,7 +36,7 @@
             LeafletLib.map.closePopup();
             $("#flower_" + flower.id + " a").css({
               "border-color": "rgb(221,221,221)",
-              "border-width": "1px"
+              "border-width": "2px"
             });
           }
         }, 750);        
@@ -53,7 +53,7 @@
             LeafletLib.map.closePopup();
             $("#flower_" + flower.id + " a").css({
               "border-color": "rgb(221,221,221)",
-              "border-width": "1px"
+              "border-width": "2px"
             });
           }
         }, 750);
@@ -104,8 +104,12 @@
 
 .row-fluid
   .span12
+    %p.lead
+      Plant a daisy, share a photo, watch it grow.
+      %a{:href => '/form'} Get started &raquo;
+
     #map
     %hr
-    %h4 Recent Instagram photos
+    %h4 Recent daisy photos
     %ul.thumbnails
       #recentlist

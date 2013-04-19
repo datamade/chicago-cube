@@ -15,7 +15,7 @@
 
   = f.input :address, :label => "Where did you plant it?", :required => false, :wrapper => :append do
     = f.input_field :address, :placeholder => '123 N State St.'
-    %a#geolocate.btn.btn-info{ :href => "#" } 
-      Find Me
+    %a#geolocate.btn{ :href => "#" } 
+      %i.icon-screenshot
     
   = f.button :submit, :value => 'Share', :class => 'btn btn-primary'
