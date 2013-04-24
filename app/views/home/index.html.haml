@@ -61,6 +61,10 @@
 
     };
     var enableMarker = function(marker, flower){
+      $("#flower_" + flower.id).on("mouseover", function(e){
+        marker.fire('click');
+      });
+
       marker.bindPopup('<a href="/flower/' + flower.id + '"><h4>' + flower.name + '</h4>' + latestPhoto( flower ) + '</a>')
 
       marker.on('click', function(e){
@@ -68,7 +72,7 @@
       });
       marker.on('mouseover', function(e){
         if($(".leaflet-popup").length === 0){
-          marker.fire('click');
+          marker.fireEvent('click', e);
         }
       });
     };
@@ -76,20 +80,14 @@
     var flowercount = 0; // limits number of photos in gallery
 
     for(var flower in flowers){
+      if(latestPhoto(flowers[flower]) != ""){
+        $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
+      }
+
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
       var marker = new L.Marker( pt, { icon: flowerIcon } );
       enableMarker(marker, flowers[flower]);
       LeafletLib.addMarker( marker );
-
-      if(latestPhoto(flowers[flower]) != ""){
-        flowercount++;
-        if(flowercount < 6){
-          $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
-          $("#flower_" + flowers[flower].id).on('mouseover', function(e){
-            marker.fire('click');
-          });
-        }
-      }
     }
     LeafletLib.fitFeatures();
 
