@@ -35,14 +35,19 @@
       and it will show up here!
 
     %h4 Instagram photos
-    %ul.thumbnails
-      - @flower.instagram_photos.each do |photo|
-        %li.span4
+    .thumbnails
+      - @flower.instagram_photos.each_with_index do |photo, index|
+        .span4
           .thumbnail
             %img{:alt => photo.caption.nil? ? '' : photo.caption.text, :title => photo.caption.nil? ? '' : photo.caption.text, :src => photo.images.low_resolution.url }
             - if photo.created_time != nil
               %p.text-center
+                = photo.caption.text
+                %br
                 = Time.at( photo.created_time.to_i ).strftime "%B %-d, %Y"
+        - if index % 2 == 1
+          .clearfix
+
 
 
   .span4
