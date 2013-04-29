@@ -8,14 +8,30 @@
       });
     });
 
-%h4 Share your daisy with us
+.row
+  .span5.offset2
 
-= simple_form_for(:flowers, :html => { :class => 'form' }) do |f|
-  = f.input :name, :label => "Name your daisy", :placeholder => 'Gerbera L.',:required => false
+    %h2 Share your daisy with us
 
-  = f.input :address, :label => "Where did you plant it?", :required => false, :wrapper => :append do
-    = f.input_field :address, :placeholder => '123 N State St.'
-    %a#geolocate.btn{ :href => "#" } 
-      %i.icon-screenshot
-    
-  = f.button :submit, :value => 'Share', :class => 'btn btn-primary'
+    = simple_form_for(:flowers, :html => { :class => 'form' }) do |f|
+      = f.input :name, :label => "Name your daisy", :placeholder => 'Gerbera L.',:required => false
+
+      = f.input :address, :label => "Where did you plant it?", :required => false, :wrapper => :append do
+        = f.input_field :address, :placeholder => '123 N State St.'
+        %a#geolocate.btn{ :href => "#" } 
+          %i.icon-screenshot
+        
+      = f.button :submit, :value => 'Share', :class => 'btn btn-primary'
+
+  .span4
+    .well
+      %h3 Instructions
+      %ol
+        %li plant your daisy seed bomb
+        %li go to chicagocube.org
+        %li 
+          %strong 
+            fill out this form with a name and location
+        %li write down the unique tag we give you
+        %li take a picture on Instagram and tag it
+        %li tell a friend!

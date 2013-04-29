@@ -6,4 +6,4 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Flower.create(name: 'Dereks Flower', address: 'Merchandise Mart Chicago, IL', latitude: 41.888569, longitude: -87.635528)
+Flower.create(name: 'Derek\'s Flower', address: 'Merchandise Mart Chicago, IL', latitude: 41.888569, longitude: -87.635528)
