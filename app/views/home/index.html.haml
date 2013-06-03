@@ -81,7 +81,7 @@
 
     for(var flower in flowers){
       if(latestPhoto(flowers[flower]) != ""){
-        $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span2'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
+        $("#recentlist").append("<li id='flower_" + flowers[flower].id + "' class='span1'><a href='/flower/" + flowers[flower].id + "' class='thumbnail'>" + latestPhoto(flowers[flower]) + "</a></li>");
       }
 
       var pt = new L.LatLng( flowers[flower].latitude, flowers[flower].longitude );
@@ -100,7 +100,7 @@
       }
     }
 
-.row-fluid
+.row
   .span12
     %p.lead
       Plant a daisy, share a photo, watch it grow.
