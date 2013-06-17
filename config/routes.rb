@@ -10,5 +10,6 @@ ChicagoCube::Application.routes.draw do
   match '/flower/:id' => 'flowers#show'
 
   get "/about" => 'home#about'
+  get "/contact" => 'home#contact'
   root :to => 'home#index'
 end
